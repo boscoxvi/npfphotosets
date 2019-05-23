@@ -1,0 +1,36 @@
+    /* general styling */
+    
+    .npf_photoset .tmblr-full {
+        vertical-align:top;
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        overflow:hidden;
+    }
+    
+    .npf_photoset .tmblr-full .npf_image { width:100%; }
+    
+    /* single image row */
+    
+    .npf_photoset > .tmblr-full {
+        display:block;
+        width:100%;
+    }
+    
+    /* multiple images row */
+    
+    .nof_photoset .npf_row {
+        max-height:none;
+        margin:0;
+    }
+    
+    .npf_photoset .npf_row .tmblr-full {
+        display:inline-block;
+        cursor:pointer;
+    }
+    
+    .npf_photoset .npf_row .tmblr-full .npf_image {
+        margin:0;
+        padding:0;
+        border:0;
+    }
