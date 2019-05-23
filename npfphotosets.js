@@ -1,4 +1,4 @@
-/* npfPhotosets() v1.1.0 made by codematurgy@tumblr */
+/* npfPhotosets() v2.0.0 made by codematurgy@tumblr */
 
 function npfPhotosets(options) {
 if (options.photosetMargins == "" || !isNaN(options.photosetMargins)) {
@@ -96,7 +96,7 @@ if (options.photosetMargins == "" || !isNaN(options.photosetMargins)) {
                     /* image container width in case of default margins */
                     if (options.photosetMargins === defaultMargin) {
                         var amountOfImages = currentPhotosetRows[j].children.length;
-                        currentRowImages[k].style.width = (containerWidth - (options.photosetMargins * (amountOfImages - 1))) / amountOfImages + usedUnit;
+                        currentRowImages[k].style.width = (containerWidth - (options.photosetMargins * (amountOfImages - 1))) + usedUnit / amountOfImages;
                     }
                     /* insertion of gallery indicators */
                     if (options.insertGalleryIndicator) {
