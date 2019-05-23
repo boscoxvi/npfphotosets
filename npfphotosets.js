@@ -71,7 +71,7 @@ if (options.photosetMargins == "" || !isNaN(options.photosetMargins)) {
     }
     
     /* styling */
-    var photosets = document.querySelectorAll("." + options.generatedPhotosetContainerClass);
+    var photosets = document.querySelectorAll("." + options.generatedPhotosetContainerClass + ":not(." + options.generatedPhotosetContainerClass + "_processed)");
     for (i = 0; i < photosets.length; i++) {
         
         /* image container styling */
@@ -115,10 +115,12 @@ if (options.photosetMargins == "" || !isNaN(options.photosetMargins)) {
             
         }
         
+        photosets[i].className += " " + options.generatedPhotosetContainerClass + "_processed";
     }
     
     /* function for row styling dependent on wrapper width */
     function styleRow() {
+        var photosets = document.querySelectorAll("." + options.generatedPhotosetContainerClass);
         for (i = 0; i < photosets.length; i ++) {
             /* image container width in case of custom margins */
             if (options.photosetMargins !== defaultMargin) {
