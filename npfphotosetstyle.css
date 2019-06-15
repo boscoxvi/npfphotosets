@@ -19,15 +19,12 @@
     
     /* multiple images row */
     
-    .nof_photoset .npf_row {
+    .npf_photoset .npf_row {
         max-height:none;
         margin:0;
     }
     
-    .npf_photoset .npf_row .tmblr-full {
-        display:inline-block;
-        cursor:pointer;
-    }
+    .npf_photoset .npf_row .tmblr-full { display:inline-block; }
     
     .npf_photoset .npf_row .tmblr-full .npf_image {
         margin:0;
