@@ -1,3 +1,16 @@
+    /* override tumblr defaults */
+    
+    .npf_photoset div.npf_row {
+        display:block;
+        margin:0;
+    }
+     
+    .npf_photoset div.npf_row figure.tmblr-full { padding:0; }           
+    .npf_photoset div.npf_row figure.tmblr-full:first-child { padding-right:0; }
+    .npf_photoset div.npf_row figure.tmblr-full:last-child { padding-left:0; }
+    
+    .npf_photoset div.npf_row + div.npf_row, .npf_photoset div.npf_row + figure.tmblr-full { margin-top:0; }
+                
     /* general styling */
     
     .npf_photoset .tmblr-full {
@@ -20,7 +33,7 @@
     /* multiple images row */
     
     .npf_photoset .npf_row {
-        max-height:none;
+        max-height:none!important;
         margin:0;
     }
     
