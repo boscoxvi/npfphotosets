@@ -129,9 +129,7 @@ function npfPhotosets(selector, options) {
                 if (!hasClass(photosets[j], "adaptable_" + options.generatedPhotosetContainerClass)) {
                     for (k = 0; k < currentRow.length; k++) {
                         var currentRowImageContainers = currentRow[k].querySelectorAll("." + options.imageContainerClass);
-                        var rowWidthMinusMargins;
-                        for (l = 0; l < currentRowImageContainers.length; l++) { rowWidthMinusMargins += currentRowImageContainers.clientWidth; }
-                        for (l = 0; l < currentRowImageContainers.length; l++) { currentRowImageContainers[l].style.width = (rowWidthMinusMargins / currentRowImageContainers.length) + "px"; }
+                        for (l = 0; l < currentRowImageContainers.length; l++) { currentRowImageContainers[l].style.width = ((parseInt(window.getComputedStyle(currentRow[k]).width, 10) - (options.photosetMargins * (currentRowImageContainers.length - 1))) / currentRowImageContainers.length) + "px"; }
                     }
                 }
                 
