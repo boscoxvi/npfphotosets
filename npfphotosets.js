@@ -51,7 +51,7 @@ function npfPhotosets(selector, options) {
         
                 /* check if photoset only has full-width images and remove it  */
                 if (options.includeSingleRowImagesInPhotosets) {
-                    for (j = photosetGroups.length - j; j >= 0; j--) {
+                    for (j = photosetGroups.length - 1; j >= 0; j--) {
                         var photoset = photosetGroups[j];
                         if (photoset.every(arrayElementHasClass, options.imageContainerClass)) { photosetGroups.splice(j, 1); }
                     }
