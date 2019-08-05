@@ -35,4 +35,4 @@ npfPhotosets("postSelector", npfOptions);
 
 The options `rowClass` and `imageContainerClass` are available for easy maintenance reasons.
 
-Experimentally, there's also the `includeCommonPhotosets` option, whose value should be either true or false. This allows the plugin to create the row structure necessary as well as style photosets which were created in the traditional manner, as long as you make sure to use the same classes as the ones being assigned to the NPF-generated photosets. It's not properly commented yet since there's still the question of using Tumblr's lightbox for them.
+Experimentally, there's also the `includeCommonPhotosets` option, whose value should be either true or false. This allows the plugin to create the row structure necessary as well as style photosets which were created in the traditional manner, as long as you make sure to use the same classes as the ones being assigned to the NPF-generated photosets, as well as adding to the photoset container the `data-layout` attribute with the `{PhotosetLayout}` value. It's not properly shown yet since there's still the question of using Tumblr's lightbox for them.
