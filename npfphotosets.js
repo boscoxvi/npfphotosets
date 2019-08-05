@@ -146,7 +146,7 @@ function npfPhotosets(selector, options) {
                 }
             }
         }
-        styleRow();
+        window.onload = function() { styleRow(); }
     
         if (rowFunctionAttached === false) { window.addEventListener("resize", styleRow, false); } rowFunctionAttached = true;
     } else {
