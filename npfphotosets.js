@@ -1,9 +1,10 @@
-/* npfPhotosets() v2.0.0 made by codematurgy@tumblr */
+/* npfPhotosets() v2.1.0 made by codematurgy@tumblr */
             
 var rowFunctionAttached = false;
 
 function npfPhotosets(selector, options) {
     if (typeof selector === "string") { var postCollection = document.querySelectorAll(selector); } else { var postCollection = selector; }
+    if (!options.hasOwnProperty('includeCommonPhotosets')) { options.includeCommonPhotosets = false; }
     if (options.photosetMargins == "" || !isNaN(options.photosetMargins)) {
         /* general margin options */
         if (options.photosetMargins == "") {
@@ -26,6 +27,31 @@ function npfPhotosets(selector, options) {
         }
         function findAncestor(element, desiredClass) {
             while ((element = element.parentNode) && element.className.indexOf(desiredClass) < 0); return element;
+        }
+        
+        /* format existing photosets */
+        if (options.includeCommonPhotosets === true) {
+            unformattedPhotosets = [];
+            for (i = 0; i < postCollection.length; i++) {
+                var unformattedList = postCollection[i].querySelectorAll("." + options.generatedPhotosetContainerClass);
+                for (j = 0; j < unformattedList.length; j++) { unformattedPhotosets.push(unformattedList[j]); }
+            }
+            
+            for (i = 0; i < unformattedPhotosets.length; i++) {
+                var photosetLayout = unformattedPhotosets[i].getAttribute("data-layout");
+                var unformattedPhotosetsImages = unformattedPhotosets[i].querySelectorAll("." + options.imageContainerClass);
+                for (j = 0; j < unformattedPhotosetsImages.length; j++) {
+                    var currentPhotosetRow = photosetLayout.slice(0, 1);
+                    if (currentPhotosetRow !== "1") {
+                        var row = document.createElement("div");
+                        row.className = options.rowClass;
+                        unformattedPhotosets[i].insertBefore(row, unformattedPhotosets[i].childNodes[0]);
+                        for (k = j; k < j + currentPhotosetRow; k++) { row.appendChild(unformattedPhotosetsImages[k]); }
+                    }
+                    j = j + (currentPhotosetRow - 1);
+                    photosetLayout = photosetLayout.slice(1);
+                }
+            }
         }
     
         /* selecting possible photoset elements */
