@@ -1,7 +1,9 @@
 # npfPhotosets()
 npfPhotosets() is a plugin for styling Tumblr photosets like the layout observed on the website's dashboard. It focuses on photosets created through NPF(Neue Post Format), Tumblr's new format, which allows you to create photoset's through the entire post body instead of only at the top of it when you're the original poster.
 
-Notice that this plugin will not create photoset's entirely made of rows with only one image as of now.
+Notice that:
+1. This plugin will not create photosets entirely made of rows with only one image as of now;
+2. This plugin will not create a single lightbox when grouping images in a photoset, neither will images that do not natively include a lightbox feature receive it.
 ## Use case
 Include both the JavaScript and the CSS file in your code, then call the function and it's parameters:
 ```
@@ -32,3 +34,5 @@ npfPhotosets("postSelector", npfOptions);
 - `photosetMargins` is where the value of the margins between photos inside the photosets should be inserted. The value is measured in pixels. If you want it to have no margins, insert a 0; in case you leave it empty(like two quotation marks with nothing in-between `“”`), it will automatically use an adaptable percentage based value for the margins. You should always keep the quotation marks, even in the no margins case.
 
 The options `rowClass` and `imageContainerClass` are available for easy maintenance reasons.
+
+Experimentally, there's also the `includeCommonPhotosets` option, whose value should be either true or false. This allows the plugin to create the row structure necessary as well as style photosets which were created in the traditional manner, as long as you make sure to use the same classes as the ones being assigned to the NPF-generated photosets. It's not properly commented yet since there's still the question of using Tumblr's lightbox for them.
