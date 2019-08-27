@@ -12,6 +12,8 @@
     .npf_photoset div.npf_row + div.npf_row, .npf_photoset div.npf_row + figure.tmblr-full { margin-top:0; }
                 
     /* general styling */
+
+    .npf_photoset { text-align:center; }
     
     .npf_photoset .tmblr-full {
         vertical-align:top;
