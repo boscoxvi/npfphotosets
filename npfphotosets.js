@@ -1,10 +1,11 @@
-/* npfPhotosets() v2.1.0 made by codematurgy@tumblr */
+/* npfPhotosets() v2.2.0 made by codematurgy@tumblr */
             
 var rowFunctionAttached = false;
 
 function npfPhotosets(selector, options) {
     if (typeof selector === "string") { var postCollection = document.querySelectorAll(selector); } else { var postCollection = selector; }
     if (!options.hasOwnProperty('includeCommonPhotosets')) { options.includeCommonPhotosets = false; }
+    if (!options.hasOwnProperty('useTumblrLightbox')) { options.useTumblrLightbox = false; }
     if (options.photosetMargins == "" || !isNaN(options.photosetMargins)) {
         /* general margin options */
         if (options.photosetMargins == "") {
@@ -41,11 +42,11 @@ function npfPhotosets(selector, options) {
                 var photosetLayout = unformattedPhotosets[i].getAttribute("data-layout");
                 var unformattedPhotosetsImages = unformattedPhotosets[i].querySelectorAll("." + options.imageContainerClass);
                 for (j = 0; j < unformattedPhotosetsImages.length; j++) {
-                    var currentPhotosetRow = photosetLayout.slice(0, 1);
+                    var currentPhotosetRow = parseInt(photosetLayout.slice(0, 1));
                     if (currentPhotosetRow !== "1") {
                         var row = document.createElement("div");
                         row.className = options.rowClass;
-                        unformattedPhotosets[i].insertBefore(row, unformattedPhotosets[i].childNodes[0]);
+                        unformattedPhotosets[i].insertBefore(row, unformattedPhotosetsImages[j]);
                         for (k = j; k < j + currentPhotosetRow; k++) { row.appendChild(unformattedPhotosetsImages[k]); }
                     }
                     j = j + (currentPhotosetRow - 1);
@@ -57,7 +58,7 @@ function npfPhotosets(selector, options) {
         /* selecting possible photoset elements */
         for(i = 0; i < postCollection.length; i++) {
             rowsAndImages = [];
-            if (options.includeSingleRowImagesInPhotosets) { var possibleDiv = postCollection[i].querySelectorAll("." + options.rowClass + ", ." + options.imageContainerClass); } else { var possibleDiv = postCollection[i].querySelectorAll("." + options.rowClass); }
+            var possibleDiv = postCollection[i].querySelectorAll("." + options.rowClass + ", ." + options.imageContainerClass);
         
             for (j = 0; j < possibleDiv.length; j++) {
                 if (!hasClass(possibleDiv[j].parentNode, options.generatedPhotosetContainerClass) && (hasClass(possibleDiv[j], options.rowClass) || (hasClass(possibleDiv[j], options.imageContainerClass) && possibleDiv[j].getElementsByTagName("img").length > 0 && !hasClass(possibleDiv[j].parentNode, options.rowClass)))) { rowsAndImages.push(possibleDiv[j]); }
@@ -75,24 +76,18 @@ function npfPhotosets(selector, options) {
                     }
                 }
         
-                /* check if photoset only has full-width images and remove it  */
-                if (options.includeSingleRowImagesInPhotosets) {
-                    for (j = photosetGroups.length - 1; j >= 0; j--) {
-                        var photoset = photosetGroups[j];
-                        if (photoset.every(arrayElementHasClass, options.imageContainerClass)) { photosetGroups.splice(j, 1); }
-                    }
-                }
-        
                 /* generate photosets */
                 for (j = 0; j < photosetGroups.length; j++) {
                     var photosetElement = photosetGroups[j];
-                    for (k = 0; k < photosetElement.length; k++) {
-                        if (k === 0) {
-                            var generatePhotosetContainer = document.createElement("div");
-                            generatePhotosetContainer.className = options.generatedPhotosetContainerClass;
-                            photosetElement[k].parentNode.insertBefore(generatePhotosetContainer, photosetElement[k]);
-                            generatePhotosetContainer.appendChild(photosetElement[k]);
-                        } else { photosetElement[k].previousSibling.appendChild(photosetElement[k]); }
+                    if (photosetElement.length > 1 || (photosetElement.length === 1 && hasClass(photosetElement[0], options.rowClass))) {
+                        for (k = 0; k < photosetElement.length; k++) {
+                            if (k === 0) {
+                                var generatePhotosetContainer = document.createElement("div");
+                                generatePhotosetContainer.className = options.generatedPhotosetContainerClass;
+                                photosetElement[k].parentNode.insertBefore(generatePhotosetContainer, photosetElement[k]);
+                                generatePhotosetContainer.appendChild(photosetElement[k]);
+                            } else { photosetElement[k].previousSibling.appendChild(photosetElement[k]); }
+                        }
                     }
                 }
             }
@@ -172,9 +167,82 @@ function npfPhotosets(selector, options) {
                 }
             }
         }
-        window.onload = function() { styleRow(); }
+        
+        /* create image collection */
+        
+        var imageCollection = [];
+        
+        for (i = 0; i < postCollection.length; i++) {
+            var images = postCollection[i].querySelectorAll("." + options.generatedPhotosetContainerClass + " ." + options.imageClass);
+            for (j = 0; j < images.length; j++) { imageCollection.push(images[j]); }
+        }
+        
+        /* attach load and resize function for rows */
     
-        if (rowFunctionAttached === false) { window.addEventListener("resize", styleRow, false); } rowFunctionAttached = true;
+        if (rowFunctionAttached === false) {
+            window.addEventListener("load", styleRow, false);
+            window.addEventListener("resize", styleRow, false);
+            rowFunctionAttached = true;
+        } else {
+            var loadCheck = 0;
+        function hasLoaded(list) { loadCheck++; if (loadCheck === list.length) { styleRow(); } }
+            for (i = 0; i < imageCollection.length; i++) { imageCollection[i].onload = function() { hasLoaded(imageCollection); } }
+        }
+        
+        /* attach lightbox function */
+        
+        if (options.useTumblrLightbox === true) {
+            function removeDefaultLightbox() {
+                var imagesWithDefaultLightbox = document.querySelectorAll("." + options.rowClass + " ." + options.imageContainerClass + "[data-enable-lightbox]");
+                for (i = 0; i < imagesWithDefaultLightbox.length; i++) { imagesWithDefaultLightbox[i].removeAttribute("data-enable-lightbox"); }
+            }
+            
+            window.addEventListener("DOMContentLoaded", removeDefaultLightbox, false);
+            
+            function addLightbox() {
+                if (event.type === "click" || (event.type === "keypress" && (event.key === "Enter" || event.which === 13))) {
+                    var photo = this.querySelector("img");
+                    photosetData = [];
+                    
+                    function addData(photo) {
+                        if (!photo.getAttribute("data-highres")) {
+                            var orgSrc = photo.src.slice(0, photo.src.lastIndexOf("."));
+                            if (orgSrc.lastIndexOf("_") !== -1) {
+                                orgSrc = orgSrc.slice(0, (orgSrc.lastIndexOf("_") + 1));
+                                var imgFormat = photo.src.slice(photo.src.lastIndexOf("."));
+                                highres = orgSrc + 1280 + imgFormat;
+                            } else { highres = photo.src; }
+                            photo.setAttribute("data-highres", highres);
+                        }
+                        
+                        photosetData.push({ 
+                            "width": photo.getAttribute("data-orig-width"),
+                            "height": photo.getAttribute("data-orig-height"),
+                            "low_res": photo.src,
+                            "high_res": photo.getAttribute("data-highres")
+                        });
+                    }
+                    
+                    var photoIndex = this.getAttribute("data-count");
+                    for (el = this; el.className.indexOf(options.generatedPhotosetContainerClass) < 0; ) { el = el.parentNode; }
+                    var photos = el.querySelectorAll("." + options.imageClass);
+                    for (k = 0; k < photos.length; k++) { addData(photos[k]); }
+                    Tumblr.Lightbox.init(photosetData, photoIndex);
+                }
+            }
+            
+            for (i = 0; i < imageCollection.length; i++) {
+                for (element = imageCollection[i]; element.className.indexOf(options.generatedPhotosetContainerClass) < 0; ) { element = element.parentNode; }
+                var currentPhotosetPhotos = element.querySelectorAll("." + options.imageContainerClass);
+                for (j = 0; j < currentPhotosetPhotos.length; j++) {
+                    currentPhotosetPhotos[j].setAttribute("tabindex", "0");
+                    currentPhotosetPhotos[j].setAttribute("data-count", (j + 1));
+                    currentPhotosetPhotos[j].addEventListener("click", addLightbox, false);
+                    currentPhotosetPhotos[j].addEventListener("keypress", addLightbox, false);
+                }
+                i += (currentPhotosetPhotos.length - 1);
+            }
+        }
     } else {
         console.log('[NPF PHOTOSETS] please enter a valid custom margin value or empty "photosetMargins".');
     }
