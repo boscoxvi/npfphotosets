@@ -9,7 +9,7 @@ var npfOptions = {
    generatedPhotosetContainerClass:"npf_photoset",
    imageClass:"npf_image",
    includeCommonPhotosets: true,
-	useTumblrLightbox: true,
+   useTumblrLightbox: true,
    insertGalleryIndicator: false,
    galleryIndicatorClass: "npf_gallery_indicator",
    galleryIndicatorContent: "<img src='image_url'>",
