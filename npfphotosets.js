@@ -1,4 +1,4 @@
-/* npfPhotosets() v2.2.0 made by codematurgy@tumblr */
+/* npfPhotosets() v2.2.1 made by codematurgy@tumblr */
             
 var rowFunctionAttached = false;
 
@@ -22,32 +22,23 @@ function npfPhotosets(selector, options) {
         function hasClass(element, desiredClass) {
             return (new RegExp("^" + desiredClass + " ").test(element.className) || new RegExp(" " + desiredClass + "$").test(element.className) || new RegExp(" " + desiredClass + " ").test(element.className) || new RegExp("^" + desiredClass + "$").test(element.className));
         }
-        function isInArray(value, array) { return array.indexOf(value) >= 0; }
-        function arrayElementHasClass(element, index, array) {
-            return (new RegExp("^" + this + " ").test(element.className) || new RegExp(" " + this + "$").test(element.className) || new RegExp(" " + this + " ").test(element.className) || new RegExp("^" + this + "$").test(element.className));
-        }
-        function findAncestor(element, desiredClass) {
-            while ((element = element.parentNode) && element.className.indexOf(desiredClass) < 0); return element;
-        }
         
         /* format existing photosets */
         if (options.includeCommonPhotosets === true) {
             unformattedPhotosets = [];
             for (i = 0; i < postCollection.length; i++) {
-                var unformattedList = postCollection[i].querySelectorAll("." + options.generatedPhotosetContainerClass);
-                for (j = 0; j < unformattedList.length; j++) { unformattedPhotosets.push(unformattedList[j]); }
+                var list = postCollection[i].querySelectorAll("." + options.generatedPhotosetContainerClass);
+                for (j = 0; j < list.length; j++) { unformattedPhotosets.push(list[j]); }
             }
             
             for (i = 0; i < unformattedPhotosets.length; i++) {
                 var photosetLayout = unformattedPhotosets[i].getAttribute("data-layout");
-                var unformattedPhotosetsImages = unformattedPhotosets[i].querySelectorAll("." + options.imageContainerClass);
-                for (j = 0; j < unformattedPhotosetsImages.length; j++) {
+                var unformattedImageContainers = unformattedPhotosets[i].querySelectorAll("." + options.imageContainerClass);
+                for (j = 0; j < unformattedImageContainers.length; j++) {
                     var currentPhotosetRow = parseInt(photosetLayout.slice(0, 1));
                     if (currentPhotosetRow !== "1") {
-                        var row = document.createElement("div");
-                        row.className = options.rowClass;
-                        unformattedPhotosets[i].insertBefore(row, unformattedPhotosetsImages[j]);
-                        for (k = j; k < j + currentPhotosetRow; k++) { row.appendChild(unformattedPhotosetsImages[k]); }
+                        var row = document.createElement("div"); row.className = options.rowClass; unformattedPhotosets[i].insertBefore(row, unformattedImageContainers[j]);
+                        for (k = j; k < j + currentPhotosetRow; k++) { row.appendChild(unformattedImageContainers[k]); }
                     }
                     j = j + (currentPhotosetRow - 1);
                     photosetLayout = photosetLayout.slice(1);
@@ -56,19 +47,15 @@ function npfPhotosets(selector, options) {
         }
     
         /* selecting possible photoset elements */
-        for(i = 0; i < postCollection.length; i++) {
+        for (i = 0; i < postCollection.length; i++) {
             rowsAndImages = [];
-            var possibleDiv = postCollection[i].querySelectorAll("." + options.rowClass + ", ." + options.imageContainerClass);
-        
-            for (j = 0; j < possibleDiv.length; j++) {
-                if (!hasClass(possibleDiv[j].parentNode, options.generatedPhotosetContainerClass) && (hasClass(possibleDiv[j], options.rowClass) || (hasClass(possibleDiv[j], options.imageContainerClass) && possibleDiv[j].getElementsByTagName("img").length > 0 && !hasClass(possibleDiv[j].parentNode, options.rowClass)))) { rowsAndImages.push(possibleDiv[j]); }
-            }
+            var list = postCollection[i].querySelectorAll("." + options.rowClass + ", ." + options.imageContainerClass);
+            for (j = 0; j < list.length; j++) { if (!hasClass(list[j].parentNode, options.generatedPhotosetContainerClass) && (hasClass(list[j], options.rowClass) || (hasClass(list[j], options.imageContainerClass) && list[j].getElementsByTagName("img").length > 0 && !hasClass(list[j].parentNode, options.rowClass)))) { rowsAndImages.push(list[j]); } }
         
             photosetGroups = [];
             if (rowsAndImages.length) {
                 /* separating elements into respective photoset arrays */
-                photosetGroups.push(new Array());
-                j = 0;
+                photosetGroups.push(new Array()); j = 0;
                 for (k = 0; j < rowsAndImages.length; ) {
                     for (; j < rowsAndImages.length; j++) {
                         photosetGroups[k].push(rowsAndImages[j]);
@@ -82,10 +69,7 @@ function npfPhotosets(selector, options) {
                     if (photosetElement.length > 1 || (photosetElement.length === 1 && hasClass(photosetElement[0], options.rowClass))) {
                         for (k = 0; k < photosetElement.length; k++) {
                             if (k === 0) {
-                                var generatePhotosetContainer = document.createElement("div");
-                                generatePhotosetContainer.className = options.generatedPhotosetContainerClass;
-                                photosetElement[k].parentNode.insertBefore(generatePhotosetContainer, photosetElement[k]);
-                                generatePhotosetContainer.appendChild(photosetElement[k]);
+                                var generatePhotosetContainer = document.createElement("div"); generatePhotosetContainer.className = options.generatedPhotosetContainerClass; photosetElement[k].parentNode.insertBefore(generatePhotosetContainer, photosetElement[k]); generatePhotosetContainer.appendChild(photosetElement[k]);
                             } else { photosetElement[k].previousSibling.appendChild(photosetElement[k]); }
                         }
                     }
@@ -93,29 +77,23 @@ function npfPhotosets(selector, options) {
             }
         
             /* styling */
-            var basicPhotosets = postCollection[i].querySelectorAll("." + options.generatedPhotosetContainerClass);
-            for (j = 0; j < basicPhotosets.length; j++) {
-                /* image container styling */
-                var currentPhotosetImages = basicPhotosets[j].querySelectorAll("." + options.imageContainerClass);
-                for (k = 0; k < currentPhotosetImages.length; k++) {
-                    var singularImage = currentPhotosetImages[k].getElementsByTagName("img")[0];
-                    if (!hasClass(singularImage, options.imageClass)) { singularImage.className += " " + options.imageClass; }
-                }
-        
+            var photosets = postCollection[i].querySelectorAll("." + options.generatedPhotosetContainerClass);
+            for (j = 0; j < photosets.length; j++) {
                 /* row-specific styling */
-                var currentPhotosetRows = basicPhotosets[j].children;
+                var currentPhotosetRows = photosets[j].children;
                 for (k = 0; k < currentPhotosetRows.length; k++) {
-            
+                    if (k < currentPhotosetRows.length - 1) { currentPhotosetRows[k].style.marginBottom = usedMargin + usedUnit; }
                     /* style row with more than one image */
-                    if (currentPhotosetRows[k].className == options.rowClass) {
+                    if (hasClass(currentPhotosetRows[k], options.rowClass)) {
                         /* style row images */
                         var currentRowImages = currentPhotosetRows[k].querySelectorAll("." + options.imageContainerClass);
                         for (l = 0; l < currentRowImages.length; l++) {
-                            var amountOfImages = currentPhotosetRows[k].children.length;
-                            if (l < currentRowImages.length - 1) {
-                                currentRowImages[l].style.marginRight = usedMargin + usedUnit;
-                            }
+                            /* set actual image class */
+                            if (!hasClass(currentRowImages[l].getElementsByTagName("img")[0], options.imageClass)) { currentRowImages[l].getElementsByTagName("img")[0].className += " " + options.imageClass; }
+                            /* image container margin */
+                            if (l < currentRowImages.length - 1) { currentRowImages[l].style.marginRight = usedMargin + usedUnit; }
                             /* image container width */
+                            var amountOfImages = currentPhotosetRows[k].children.length;
                             if (defaultMargin === true) {
                                 currentRowImages[l].style.width = ((100 - (usedMargin * (amountOfImages - 1))) / amountOfImages) + usedUnit;
                             } else {
@@ -130,40 +108,40 @@ function npfPhotosets(selector, options) {
                             }
                         }
                     }
-            
-                    /* style row margin */
-                    if (k < currentPhotosetRows.length - 1) {
-                        currentPhotosetRows[k].style.marginBottom = usedMargin + usedUnit;
-                    }
-            
                 }
-                if (defaultMargin === true) { basicPhotosets[j].className += " adaptable_" + options.generatedPhotosetContainerClass; }
+                if (defaultMargin === true) { photosets[j].className += " adaptable_" + options.generatedPhotosetContainerClass; }
             }
         }
     
         /* function for row styling dependent on wrapper width */
         function styleRow() {
-            var photosets = document.getElementsByClassName("npf_photoset");
-            for (j = 0; j < photosets.length; j++) {
-                var currentRow = photosets[j].querySelectorAll("." + options.rowClass);
+            var photosetRows = document.getElementsByClassName(options.rowClass);
+            for (j = 0; j < photosetRows.length; j++) {
                 /* image container width */
-                if (!hasClass(photosets[j], "adaptable_" + options.generatedPhotosetContainerClass)) {
-                    for (k = 0; k < currentRow.length; k++) {
-                        var currentRowImageContainers = currentRow[k].querySelectorAll("." + options.imageContainerClass);
-                        for (l = 0; l < currentRowImageContainers.length; l++) { currentRowImageContainers[l].style.width = ((parseInt(window.getComputedStyle(currentRow[k]).width, 10) - (options.photosetMargins * (currentRowImageContainers.length - 1))) / currentRowImageContainers.length) + "px"; }
+                var currentRowImageContainers = photosetRows[j].querySelectorAll("." + options.imageContainerClass);
+                for (l = 0; l < currentRowImageContainers.length; l++) {
+                    if (!hasClass(photosetRows[j].parentNode, "adaptable_" + options.generatedPhotosetContainerClass)) {
+                        var rowSize = ((parseInt(window.getComputedStyle(photosetRows[j]).width, 10) - (options.photosetMargins * (currentRowImageContainers.length - 1))) / currentRowImageContainers.length);
+                        currentRowImageContainers[l].style.width = rowSize + "px";
                     }
+                    photosetRows[j].setAttribute("data-row-size", rowSize);
                 }
                 
                 /* image container height */
-                for (k = 0; k < currentRow.length; k++) {
-                    var currentRowImages = currentRow[k].querySelectorAll("." + options.imageClass);
-                    var currentRowImagesHeight = [];
-                    for(l = 0; l < currentRowImages.length; l++) { currentRowImagesHeight.push(currentRowImages[l].offsetHeight); }
-                    var rowHeight = Math.min.apply(null, currentRowImagesHeight);
-                    for(l = 0; l < currentRowImages.length; l++) {
-                        findAncestor(currentRowImages[l], options.imageContainerClass).style.height = rowHeight + parseInt(window.getComputedStyle(findAncestor(currentRowImages[l], options.imageContainerClass)).getPropertyValue("border-top-width"), 10) + parseInt(window.getComputedStyle(findAncestor(currentRowImages[l], options.imageContainerClass)).getPropertyValue("border-bottom-width"), 10) + "px";
-                        currentRowImages[l].style.marginTop = "-" + ((currentRowImages[l].offsetHeight - rowHeight) / 2) + "px";
-                    }
+                var currentRowImages = photosetRows[j].querySelectorAll("." + options.imageClass);
+                var currentRowImagesHeight = [];
+                for (l = 0; l < currentRowImages.length; l++) {
+                    if (!currentRowImages[l].getAttribute("width")) { var imgWidth = currentRowImages[l].getAttribute("data-orig-width"); var imgHeight = currentRowImages[l].getAttribute("data-orig-height"); } else { var imgWidth = currentRowImages[l].getAttribute("width"); var imgHeight = currentRowImages[l].getAttribute("height"); }
+                    var imageHeight = photosetRows[j].getAttribute("data-row-size") * (imgHeight / imgWidth);
+                    currentRowImages[l].setAttribute("data-image-size", imageHeight);
+                    currentRowImagesHeight.push(imageHeight);
+                }
+                var rowHeight = Math.min.apply(null, currentRowImagesHeight);
+                var currentRowImages = photosetRows[j].querySelectorAll("." + options.imageContainerClass);
+                for (l = 0; l < currentRowImages.length; l++) {
+                    currentRowImages[l].style.height = rowHeight + parseInt(window.getComputedStyle(currentRowImages[l]).getPropertyValue("border-top-width"), 10) + parseInt(window.getComputedStyle(currentRowImages[l]).getPropertyValue("border-bottom-width"), 10) + "px";
+                    var actualImage = currentRowImages[l].getElementsByClassName(options.imageClass)[0];
+                    actualImage.style.marginTop = "-" + ((actualImage.getAttribute("data-image-size") - rowHeight) / 2) + "px";
                 }
             }
         }
@@ -171,7 +149,6 @@ function npfPhotosets(selector, options) {
         /* create image collection */
         
         var imageCollection = [];
-        
         for (i = 0; i < postCollection.length; i++) {
             var images = postCollection[i].querySelectorAll("." + options.generatedPhotosetContainerClass + " ." + options.imageClass);
             for (j = 0; j < images.length; j++) { imageCollection.push(images[j]); }
@@ -196,7 +173,6 @@ function npfPhotosets(selector, options) {
                 var imagesWithDefaultLightbox = document.querySelectorAll("." + options.rowClass + " ." + options.imageContainerClass + "[data-enable-lightbox]");
                 for (i = 0; i < imagesWithDefaultLightbox.length; i++) { imagesWithDefaultLightbox[i].removeAttribute("data-enable-lightbox"); }
             }
-            
             window.addEventListener("DOMContentLoaded", removeDefaultLightbox, false);
             
             function addLightbox() {
