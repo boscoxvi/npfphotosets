@@ -82,14 +82,15 @@ function npfPhotosets(selector, options) {
                 /* row-specific styling */
                 var currentPhotosetRows = photosets[j].children;
                 for (k = 0; k < currentPhotosetRows.length; k++) {
+                    /* row margin */
                     if (k < currentPhotosetRows.length - 1) { currentPhotosetRows[k].style.marginBottom = usedMargin + usedUnit; }
+                    /* image class */
+                    for (l = 0; l < currentPhotosetRows[k].getElementsByTagName("img").length; l++) { currentPhotosetRows[k].getElementsByTagName("img")[l].className += " " + options.imageClass; }
                     /* style row with more than one image */
                     if (hasClass(currentPhotosetRows[k], options.rowClass)) {
                         /* style row images */
                         var currentRowImages = currentPhotosetRows[k].querySelectorAll("." + options.imageContainerClass);
                         for (l = 0; l < currentRowImages.length; l++) {
-                            /* set actual image class */
-                            if (!hasClass(currentRowImages[l].getElementsByTagName("img")[0], options.imageClass)) { currentRowImages[l].getElementsByTagName("img")[0].className += " " + options.imageClass; }
                             /* image container margin */
                             if (l < currentRowImages.length - 1) { currentRowImages[l].style.marginRight = usedMargin + usedUnit; }
                             /* image container width */
