@@ -119,12 +119,13 @@ function npfPhotosets(selector, options) {
             var photosetRows = document.getElementsByClassName(options.rowClass);
             for (j = 0; j < photosetRows.length; j++) {
                 /* image container width */
-                var currentRowImageContainers = photosetRows[j].querySelectorAll("." + options.imageContainerClass);
+                var currentRowImageContainers = [];
+                for (l = 0; l < photosetRows[j].childNodes.length; l++) {
+                    if (new RegExp(options.imageContainerClass).test(photosetRows[j].childNodes[l].className) === true || new RegExp(options.imageContainerClass).test(photosetRows[j].childNodes[l].childNodes[0].className) === true) { currentRowImageContainers.push(photosetRows[j].childNodes[l]); }
+                }
+                var rowSize = (parseFloat(window.getComputedStyle(photosetRows[j]).width, 10) - (options.photosetMargins * (currentRowImageContainers.length - 1))) / currentRowImageContainers.length;
                 for (l = 0; l < currentRowImageContainers.length; l++) {
-                    if (!hasClass(photosetRows[j].parentNode, "adaptable_" + options.generatedPhotosetContainerClass)) {
-                        var rowSize = ((parseInt(window.getComputedStyle(photosetRows[j]).width, 10) - (options.photosetMargins * (currentRowImageContainers.length - 1))) / currentRowImageContainers.length);
-                        currentRowImageContainers[l].style.width = rowSize + "px";
-                    }
+                    if (!hasClass(photosetRows[j].parentNode, "adaptable_" + options.generatedPhotosetContainerClass)) { currentRowImageContainers[l].style.width = rowSize + "px"; }
                     photosetRows[j].setAttribute("data-row-size", rowSize);
                 }
                 
@@ -132,7 +133,7 @@ function npfPhotosets(selector, options) {
                 var currentRowImages = photosetRows[j].querySelectorAll("." + options.imageClass);
                 var currentRowImagesHeight = [];
                 for (l = 0; l < currentRowImages.length; l++) {
-                    if (!currentRowImages[l].getAttribute("width")) { var imgWidth = currentRowImages[l].getAttribute("data-orig-width"); var imgHeight = currentRowImages[l].getAttribute("data-orig-height"); } else { var imgWidth = currentRowImages[l].getAttribute("width"); var imgHeight = currentRowImages[l].getAttribute("height"); }
+                    if (currentRowImages[l].getAttribute("width") == false || currentRowImages[l].getAttribute("width") == null || currentRowImages[l].getAttribute("height") == false || currentRowImages[l].getAttribute("height") == null) { var imgWidth = currentRowImages[l].getAttribute("data-orig-width"); var imgHeight = currentRowImages[l].getAttribute("data-orig-height"); } else { var imgWidth = currentRowImages[l].getAttribute("width"); var imgHeight = currentRowImages[l].getAttribute("height"); }
                     var imageHeight = photosetRows[j].getAttribute("data-row-size") * (imgHeight / imgWidth);
                     currentRowImages[l].setAttribute("data-image-size", imageHeight);
                     currentRowImagesHeight.push(imageHeight);
