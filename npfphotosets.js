@@ -1,4 +1,4 @@
-/* npfPhotosets() v2.2.2 made by codematurgy@tumblr */
+/* npfPhotosets() v2.2.3 made by codematurgy@tumblr */
             
 var rowFunctionAttached = false;
 
@@ -159,7 +159,7 @@ function npfPhotosets(selector, options) {
         /* attach load and resize function for rows */
     
         if (rowFunctionAttached === false) {
-            window.addEventListener("load", styleRow, false);
+            styleRow();
             window.addEventListener("resize", styleRow, false);
             rowFunctionAttached = true;
         } else {
