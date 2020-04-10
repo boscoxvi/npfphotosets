@@ -1,48 +1,51 @@
-    /* override tumblr defaults */
-    
-    .npf_photoset div.npf_row {
-        display:block;
-        margin:0;
-    }
-     
-    .npf_photoset div.npf_row figure.tmblr-full { padding:0; }           
-    .npf_photoset div.npf_row figure.tmblr-full:first-child { padding-right:0; }
-    .npf_photoset div.npf_row figure.tmblr-full:last-child { padding-left:0; }
-    
-    .npf_photoset div.npf_row + div.npf_row, .npf_photoset div.npf_row + figure.tmblr-full { margin-top:0; }
-                
-    /* general styling */
+/* override tumblr defaults */
 
-    .npf_photoset { text-align:center; }
-    
-    .npf_photoset .tmblr-full {
-        vertical-align:top;
-        margin:0;
-        padding:0;
-        box-sizing:border-box;
-        overflow:hidden;
-    }
-    
-    .npf_photoset .tmblr-full .npf_image { width:100%; }
-    
-    /* single image row */
-    
-    .npf_photoset > .tmblr-full {
-        display:block;
-        width:100%;
-    }
-    
-    /* multiple images row */
-    
-    .npf_photoset .npf_row {
-        max-height:none!important;
-        margin:0;
-    }
-    
-    .npf_photoset .npf_row .tmblr-full { display:inline-block; }
-    
-    .npf_photoset .npf_row .tmblr-full .npf_image {
-        margin:0;
-        padding:0;
-        border:0;
-    }
+.npf_photoset div.npf_row {
+    display:block;
+    margin:0;
+}
+
+.npf_photoset div.npf_row figure.tmblr-full { padding:0; }           
+.npf_photoset div.npf_row figure.tmblr-full:first-child { padding-right:0; }
+.npf_photoset div.npf_row figure.tmblr-full:last-child { padding-left:0; }
+
+.npf_photoset div.npf_row + div.npf_row, .npf_photoset div.npf_row + figure.tmblr-full { margin-top:0; }
+
+/* general styling */
+
+.npf_photoset { text-align:center; }
+
+.npf_photoset .tmblr-full {
+    vertical-align:top;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    overflow:hidden;
+}
+
+.npf_photoset .tmblr-full .npf_image {
+    width:100%;
+    height:auto;
+}
+
+/* single image row */
+
+.npf_photoset > .tmblr-full {
+    display:block;
+    width:100%;
+}
+
+/* multiple images row */
+
+.npf_photoset .npf_row {
+    max-height:none!important;
+    margin:0;
+}
+
+.npf_photoset .npf_row .tmblr-full { display:inline-block; }
+
+.npf_photoset .npf_row .tmblr-full .npf_image {
+    margin:0;
+    padding:0;
+    border:0;
+}
