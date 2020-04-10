@@ -34,3 +34,24 @@ npfPhotosets("postSelector", npfOptions);
 The options `rowClass` and `imageContainerClass` are available for easy maintenance reasons.
 
 As of 24/09/2019, `includeSingleRowImagesInPhotosets` has been removed.
+## How to use npfPhotosets() with common photosets
+If you've set `includeCommonPhotosets` to true in order to apply the plugin not only to photosets in text posts but also to Legacy photosets, you'll also have to setup your HTML correctly. For this, make sure you:
+- Include a main wrapper with the `npf_photoset` class, or whatever class you're using in the plugin;
+- Set the `data-layout` attribute to this main wrapper with the corresponding Tumblr variable for photoset layouts, which is `{PhotosetLayout}`;
+- Include a wrapper for each image with the `tmblr-full` class, or in case it is changed, whatever is the new default class for `figures` on Tumblr;
+- Include the `npf_image` class, or whatever class you're using in the plugin, in each image;
+- Set all required attributes to the image, which besides `src` are `data-orig-width`, `data-orig-height`, and `data-highres` - all with the correct Tumblr variables, which are respectively `{PhotoWidth-HighRes}`, `{PhotoHeight-HighRes}`. and `{PhotoURL-HighRes}`.
+
+You should end up with something like this:
+```
+{block:Photoset}
+   <div class="npf_photoset" data-layout="{PhotosetLayout}">
+      {block:Photos}
+         <figure class="tmblr-full"> 
+             <img class="npf_image" alt="{PhotoAlt}" src="{PhotoURL-500}" data-orig-width="{PhotoWidth-HighRes}" data-orig-height="{PhotoHeight-HighRes}" data-highres="{PhotoURL-HighRes}">
+         </figure>
+      {/block:Photos}
+   </div>
+{/block:Photoset}
+```
+If you wish to, you can set your `src` attribute to be `{PhotoURL-HighRes}` as well, as it makes it easier to handle responsive designs for screens larger than phones and smaller than the average desktop.
