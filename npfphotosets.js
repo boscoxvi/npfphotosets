@@ -1,4 +1,4 @@
-/* npfPhotosets() v2.2.3 made by codematurgy@tumblr */
+/* npfPhotosets() v2.2.4 made by codematurgy@tumblr */
             
 var rowFunctionAttached = false;
 
@@ -123,11 +123,14 @@ function npfPhotosets(selector, options) {
                 for (l = 0; l < photosetRows[j].childNodes.length; l++) {
                     if (new RegExp(options.imageContainerClass).test(photosetRows[j].childNodes[l].className) === true || new RegExp(options.imageContainerClass).test(photosetRows[j].childNodes[l].childNodes[0].className) === true) { currentRowImageContainers.push(photosetRows[j].childNodes[l]); }
                 }
-                var rowSize = (parseFloat(window.getComputedStyle(photosetRows[j]).width, 10) - (options.photosetMargins * (currentRowImageContainers.length - 1))) / currentRowImageContainers.length;
-                for (l = 0; l < currentRowImageContainers.length; l++) {
-                    if (!hasClass(photosetRows[j].parentNode, "adaptable_" + options.generatedPhotosetContainerClass)) { currentRowImageContainers[l].style.width = rowSize + "px"; }
-                    photosetRows[j].setAttribute("data-row-size", rowSize);
+                
+                if (!hasClass(photosetRows[j].parentNode, "adaptable_" + options.generatedPhotosetContainerClass)) {
+                    var rowSize = (parseFloat(window.getComputedStyle(photosetRows[j]).width, 10) - (options.photosetMargins * (currentRowImageContainers.length - 1))) / currentRowImageContainers.length;
+                    for (l = 0; l < currentRowImageContainers.length; l++) { currentRowImageContainers[l].style.width = rowSize + "px"; }
                 }
+                
+                if (hasClass(photosetRows[j].parentNode, "adaptable_" + options.generatedPhotosetContainerClass)) { var rowSize = parseFloat(window.getComputedStyle(currentRowImageContainers[0]).width, 10); }
+                photosetRows[j].setAttribute("data-row-size", rowSize);
                 
                 /* image container height */
                 var currentRowImages = photosetRows[j].querySelectorAll("." + options.imageClass);
