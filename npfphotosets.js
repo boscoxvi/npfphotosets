@@ -1,4 +1,4 @@
-/* npfPhotosets() v2.2.4 made by codematurgy@tumblr */
+/* npfPhotosets() v2.2.5 made by codematurgy@tumblr */
             
 var rowFunctionAttached = false;
 
@@ -93,13 +93,6 @@ function npfPhotosets(selector, options) {
                         for (l = 0; l < currentRowImages.length; l++) {
                             /* image container margin */
                             if (l < currentRowImages.length - 1) { currentRowImages[l].style.marginRight = usedMargin + usedUnit; }
-                            /* image container width */
-                            var amountOfImages = currentPhotosetRows[k].children.length;
-                            if (defaultMargin === true) {
-                                currentRowImages[l].style.width = ((100 - (usedMargin * (amountOfImages - 1))) / amountOfImages) + usedUnit;
-                            } else {
-                                currentRowImages[l].style.width = ((currentPhotosetRows[k].clientWidth - (usedMargin * (amountOfImages - 1))) / amountOfImages) + "px";
-                            }
                             /* insertion of gallery indicators */
                             if (options.insertGalleryIndicator) {
                                 var generateGalleryIndicator = document.createElement("div");
@@ -124,12 +117,7 @@ function npfPhotosets(selector, options) {
                     if (new RegExp(options.imageContainerClass).test(photosetRows[j].childNodes[l].className) === true || new RegExp(options.imageContainerClass).test(photosetRows[j].childNodes[l].childNodes[0].className) === true) { currentRowImageContainers.push(photosetRows[j].childNodes[l]); }
                 }
                 
-                if (!hasClass(photosetRows[j].parentNode, "adaptable_" + options.generatedPhotosetContainerClass)) {
-                    var rowSize = (parseFloat(window.getComputedStyle(photosetRows[j]).width, 10) - (options.photosetMargins * (currentRowImageContainers.length - 1))) / currentRowImageContainers.length;
-                    for (l = 0; l < currentRowImageContainers.length; l++) { currentRowImageContainers[l].style.width = rowSize + "px"; }
-                }
-                
-                if (hasClass(photosetRows[j].parentNode, "adaptable_" + options.generatedPhotosetContainerClass)) { var rowSize = parseFloat(window.getComputedStyle(currentRowImageContainers[0]).width, 10); }
+                if (!hasClass(photosetRows[j].parentNode, "adaptable_" + options.generatedPhotosetContainerClass)) { var rowSize = (parseFloat(window.getComputedStyle(photosetRows[j]).width, 10) - (options.photosetMargins * (currentRowImageContainers.length - 1))) / currentRowImageContainers.length; } else { var rowSize = parseFloat(window.getComputedStyle(currentRowImageContainers[0]).width, 10); }
                 photosetRows[j].setAttribute("data-row-size", rowSize);
                 
                 /* image container height */
