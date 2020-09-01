@@ -1,8 +1,9 @@
 /* override tumblr defaults */
 
 .npf_photoset div.npf_row {
-    display:block;
+    max-height:none!important;
     margin:0;
+    display:flex;
 }
 
 .npf_photoset div.npf_row figure.tmblr-full { padding:0; }           
@@ -37,12 +38,10 @@
 
 /* multiple images row */
 
-.npf_photoset .npf_row {
-    max-height:none!important;
-    margin:0;
+.npf_photoset .npf_row .tmblr-full {
+    display:inline-block;
+    flex:1 1 100px;
 }
-
-.npf_photoset .npf_row .tmblr-full { display:inline-block; }
 
 .npf_photoset .npf_row .tmblr-full .npf_image {
     margin:0;
