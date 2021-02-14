@@ -1,4 +1,4 @@
-/* npfPhotosets() v2.2.5 made by codematurgy@tumblr */
+/* npfPhotosets() v2.2.6 made by codematurgy@tumblr */
             
 var rowFunctionAttached = false;
 
@@ -21,6 +21,10 @@ function npfPhotosets(selector, options) {
         /* functions used */
         function hasClass(element, desiredClass) {
             return (new RegExp("^" + desiredClass + " ").test(element.className) || new RegExp(" " + desiredClass + "$").test(element.className) || new RegExp(" " + desiredClass + " ").test(element.className) || new RegExp("^" + desiredClass + "$").test(element.className));
+        }
+        
+        function searchParent(element, desiredClass, untilClass) {
+            
         }
         
         /* format existing photosets */
@@ -91,6 +95,13 @@ function npfPhotosets(selector, options) {
                         /* style row images */
                         var currentRowImages = currentPhotosetRows[k].querySelectorAll("." + options.imageContainerClass);
                         for (l = 0; l < currentRowImages.length; l++) {
+                            /* remove extra wrapper */
+                            if (currentRowImages[l].parentNode.className != options.rowClass) {
+                                currentRowImages[l].parentNode.setAttribute("deletenode", "true");
+                                currentPhotosetRows[k].appendChild(currentRowImages[l]);
+                                currentPhotosetRows[k].querySelector("[deletenode='true']").remove();
+                                
+                            }
                             /* image container margin */
                             if (l < currentRowImages.length - 1) { currentRowImages[l].style.marginRight = usedMargin + usedUnit; }
                             /* insertion of gallery indicators */
