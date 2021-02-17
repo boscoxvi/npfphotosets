@@ -1,11 +1,22 @@
-/* npfPhotosets() v2.2.6 made by codematurgy@tumblr */
+/* npfPhotosets() v2.2.7 made by codematurgy@tumblr */
             
 var rowFunctionAttached = false;
 
 function npfPhotosets(selector, options) {
     if (typeof selector === "string") { var postCollection = document.querySelectorAll(selector); } else { var postCollection = selector; }
+    
+    if (!options.hasOwnProperty('rowClass')) { options.rowClass = "npf_row"; }
+    if (!options.hasOwnProperty('extraWrapperClass')) { options.extraWrapperClass = "npf_col"; }
+    if (!options.hasOwnProperty('imageContainerClass')) { options.imageContainerClass = "tmblr-full"; }
+    if (!options.hasOwnProperty('generatedPhotosetContainerClass')) { options.generatedPhotosetContainerClass = "npf_photoset"; }
+    if (!options.hasOwnProperty('imageClass')) { options.imageClass = "npf_image"; }
+    
     if (!options.hasOwnProperty('includeCommonPhotosets')) { options.includeCommonPhotosets = false; }
-    if (!options.hasOwnProperty('useTumblrLightbox')) { options.useTumblrLightbox = false; }
+    if (!options.hasOwnProperty('useTumblrLightbox')) { options.useTumblrLightbox = true; }
+    if (!options.hasOwnProperty('insertGalleryIndicator')) { options.insertGalleryIndicator = false; }
+    if (!options.hasOwnProperty('galleryIndicatorClass')) { options.galleryClass = "npf_gallery_indicator"; }
+    if (!options.hasOwnProperty('galleryIndicatorContent')) { options.galleryIndicatorContent = ""; }
+    
     if (options.photosetMargins == "" || !isNaN(options.photosetMargins)) {
         /* general margin options */
         if (options.photosetMargins == "") {
@@ -21,10 +32,6 @@ function npfPhotosets(selector, options) {
         /* functions used */
         function hasClass(element, desiredClass) {
             return (new RegExp("^" + desiredClass + " ").test(element.className) || new RegExp(" " + desiredClass + "$").test(element.className) || new RegExp(" " + desiredClass + " ").test(element.className) || new RegExp("^" + desiredClass + "$").test(element.className));
-        }
-        
-        function searchParent(element, desiredClass, untilClass) {
-            
         }
         
         /* format existing photosets */
@@ -54,7 +61,12 @@ function npfPhotosets(selector, options) {
         for (i = 0; i < postCollection.length; i++) {
             rowsAndImages = [];
             var list = postCollection[i].querySelectorAll("." + options.rowClass + ", ." + options.imageContainerClass);
-            for (j = 0; j < list.length; j++) { if (!hasClass(list[j].parentNode, options.generatedPhotosetContainerClass) && (hasClass(list[j], options.rowClass) || (hasClass(list[j], options.imageContainerClass) && list[j].getElementsByTagName("img").length > 0 && !hasClass(list[j].parentNode, options.rowClass)))) { rowsAndImages.push(list[j]); } }
+            for (j = 0; j < list.length; j++) { if (
+                (!hasClass(list[j].parentNode, options.generatedPhotosetContainerClass) && hasClass(list[j], options.rowClass)) || (
+                hasClass(list[j], options.imageContainerClass) && list[j].getElementsByTagName("IMG").length > 0 && !hasClass(list[j].parentNode, options.rowClass) && !hasClass(list[j].parentNode, options.extraWrapperClass) &&
+                    ((list[j].previousSibling !== null && ((hasClass(list[j].previousSibling, options.imageContainerClass) && list[j].previousSibling.getElementsByTagName("IMG").length > 0) || hasClass(list[j].previousSibling, options.rowClass))) ||
+                    (list[j].nextSibling !== null && ((hasClass(list[j].nextSibling, options.imageContainerClass) && list[j].nextSibling.getElementsByTagName("IMG").length > 0) || hasClass(list[j].nextSibling, options.rowClass))))
+                )) { rowsAndImages.push(list[j]); } }
         
             photosetGroups = [];
             if (rowsAndImages.length) {
@@ -63,7 +75,7 @@ function npfPhotosets(selector, options) {
                 for (k = 0; j < rowsAndImages.length; ) {
                     for (; j < rowsAndImages.length; j++) {
                         photosetGroups[k].push(rowsAndImages[j]);
-                        if ((rowsAndImages[j].nextSibling === null || rowsAndImages[j].nextSibling !== rowsAndImages[j + 1]) && rowsAndImages[j + 1] !== undefined) { k++; photosetGroups.push(new Array()); }
+                        if (rowsAndImages[j].nextSibling !== rowsAndImages[j + 1] && rowsAndImages[j + 1] !== undefined) { k++; photosetGroups.push(new Array()); }
                     }
                 }
         
@@ -96,11 +108,10 @@ function npfPhotosets(selector, options) {
                         var currentRowImages = currentPhotosetRows[k].querySelectorAll("." + options.imageContainerClass);
                         for (l = 0; l < currentRowImages.length; l++) {
                             /* remove extra wrapper */
-                            if (currentRowImages[l].parentNode.className != options.rowClass) {
+                            if (currentRowImages[l].parentNode.className == options.extraWrapperClass) {
                                 currentRowImages[l].parentNode.setAttribute("deletenode", "true");
                                 currentPhotosetRows[k].appendChild(currentRowImages[l]);
                                 currentPhotosetRows[k].querySelector("[deletenode='true']").remove();
-                                
                             }
                             /* image container margin */
                             if (l < currentRowImages.length - 1) { currentRowImages[l].style.marginRight = usedMargin + usedUnit; }
