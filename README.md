@@ -4,36 +4,35 @@ npfPhotosets() is a plugin for styling Tumblr photosets like the layout observed
 Include both the JavaScript and the CSS file in your code, then call the function and it's parameters:
 ```
 var npfOptions = {
-   rowClass:"npf_row",
-   imageContainerClass:"tmblr-full",
-   generatedPhotosetContainerClass:"npf_photoset",
-   imageClass:"npf_image",
-   includeCommonPhotosets: true,
-   useTumblrLightbox: true,
-   insertGalleryIndicator: false,
-   galleryIndicatorClass: "npf_gallery_indicator",
-   galleryIndicatorContent: "<img src='image_url'>",
+   includeCommonPhotosets: false,
    photosetMargins:""
 }
 
 npfPhotosets("postSelector", npfOptions);
 ```
 ## Options
+### Mandatory
 - `"postSelector"` is where the selector used for your posts goes, between quotes as suggested. It can be a mere HTML selector(like `“article”`), a class(`“.posts”`), or even an array-like list.
-- `rowClass` is where the name of the class of Tumblr’s generated row wrappers should be inserted. There is no need to change this unless Tumblr changes its used class name.
-- `imageContainerClass` is where the name of the class of Tumblr’s generated full-size image wrappers should be inserted. There is no need to change this unless Tumblr changes its used class name.
-- `generatedPhotosetContainerClass` is where the name of the class to be assigned to the generated photoset wrappers should be inserted. It is presented by default as npf_photoset but if anyone feels the need to use a different class name, it should be changed here. Note that this allows only one class.
-- `imageClass` is where the name of the class to be assigned to each photoset image should be inserted. It is presented by default as npf_image but if anyone feels the need to use a different class name, it should be changed here. Note that this allows only one class.
-- `includeCommonPhotosets` should have either a true or false value. If true, this will allow photosets made with the Legacy post format to be styled through this plugin. For this to work correctly, you must make sure your photosets share the same class names used for NPF photosets' elements, as well as adding to the photoset container the `data-layout` attribute with the `{PhotosetLayout}` value.
-- `useTumblrLightbox` should have either a true or false value. If true, this will allow all photosets to use the built-in Tumblr function for inserting lightboxes.
-- `insertGalleryIndicator` should have either a true or false value. If true, this will insert a div into each image container where you can put an indication that there is an image gallery with a lightbox link. If you’d rather have no indicator, change this to false.
-- `galleryIndicatorClass` is where the name of the class to be assigned to each gallery indicator div should be inserted. It is presented by default as npf_gallery_indicator but if anyone feels the need to use a different class name, it should be changed here. Note that this allows only one class.
-- `galleryIndicatorContent` is where you can insert content inside the gallery indicator div, such as text or an icon. The inserted `<img>` tag is merely an example.
 - `photosetMargins` is where the value of the margins between photos inside the photosets should be inserted. The value is measured in pixels. If you want it to have no margins, insert a 0; in case you leave it empty(like two quotation marks with nothing in-between `“”`), it will automatically use an adaptable percentage based value for the margins. You should always keep the quotation marks, even in the no margins case.
-
-The options `rowClass` and `imageContainerClass` are available for easy maintenance reasons.
+### Customization
+- `includeCommonPhotosets` should have either a true or false value. If true, this will allow photosets made with the Legacy post format to be styled through this plugin. For this to work correctly, you must make sure your photosets share the same class names used for NPF photosets' elements, as well as adding to the photoset container the `data-layout` attribute with the `{PhotosetLayout}` value. This is false by default.
+- `useTumblrLightbox` should have either a true or false value. If true, this will allow all photosets to use the built-in Tumblr function for inserting lightboxes. This is true by default.
+- `insertGalleryIndicator` should have either a true or false value. If true, this will insert a div into each image container where you can put an indication that there is an image gallery with a lightbox link. If you’d rather have no indicator, change this to false. This is false by default.
+- `galleryIndicatorClass` is where the name of the class to be assigned to each gallery indicator div should be inserted. It is presented by default as `"npf_gallery_indicator"` but if anyone feels the need to use a different class name, it should be changed here. Note that this allows only one class.
+- `galleryIndicatorContent` is where you can insert content inside the gallery indicator div, such as text or an icon.
+### Maintenance classes
+These classes are generated by Tumblr when setting up the post structure, and are used to find the elements that need to be used. The only reason for you to edit them is in case Tumblr changes them and you want to update these manually.
+- `rowClass` is where the name of the class of Tumblr’s generated row wrappers should be inserted. The current value used is `"npf_row"`.
+- `extraWrapperClass` is where the name of the class of Tumblr’s generated extra wrappers for each row image should be inserted. The current value used is `"npf_col"`.
+- `imageContainerClass` is where the name of the class of Tumblr’s generated full-size image wrappers should be inserted. The current value used is `"tmblr-full"`.
+### Structure classes
+These classes are not generated by Tumblr, but instead, by the plugin.
+- `generatedPhotosetContainerClass` is where the name of the class to be assigned to the generated photoset wrappers should be inserted. It is presented by default as `"npf_photoset"` but if anyone feels the need to use a different class name, it should be changed here - it will have to be changed on the CSS file too, so change wisely. Note that this allows only one class.
+- `imageClass` is where the name of the class to be assigned to each photoset image should be inserted. It is presented by default as `"npf_image"` but if anyone feels the need to use a different class name, it should be changed here. Note that this allows only one class.
 
 As of 24/09/2019, `includeSingleRowImagesInPhotosets` has been removed.
+
+
 ## How to use npfPhotosets() with common photosets
 If you've set `includeCommonPhotosets` to true in order to apply the plugin not only to photosets in text posts but also to Legacy photosets, you'll also have to setup your HTML correctly. For this, make sure you:
 - Include a main wrapper with the `npf_photoset` class, or whatever class you're using in the plugin;
