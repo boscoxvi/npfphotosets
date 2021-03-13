@@ -1,4 +1,4 @@
-/* npfPhotosets() v2.2.7 made by codematurgy@tumblr */
+/* npfPhotosets() v2.2.8 made by codematurgy@tumblr */
             
 var rowFunctionAttached = false;
 
@@ -8,6 +8,7 @@ function npfPhotosets(selector, options) {
     if (!options.hasOwnProperty('rowClass')) { options.rowClass = "npf_row"; }
     if (!options.hasOwnProperty('extraWrapperClass')) { options.extraWrapperClass = "npf_col"; }
     if (!options.hasOwnProperty('imageContainerClass')) { options.imageContainerClass = "tmblr-full"; }
+    if (!options.hasOwnProperty('photoAnchorClass')) { options.photoAnchorClass = "post_media_photo_anchor"; }
     if (!options.hasOwnProperty('generatedPhotosetContainerClass')) { options.generatedPhotosetContainerClass = "npf_photoset"; }
     if (!options.hasOwnProperty('imageClass')) { options.imageClass = "npf_image"; }
     
@@ -107,6 +108,14 @@ function npfPhotosets(selector, options) {
                         /* style row images */
                         var currentRowImages = currentPhotosetRows[k].querySelectorAll("." + options.imageContainerClass);
                         for (l = 0; l < currentRowImages.length; l++) {
+                            /* handle photo anchor situation */
+                            if (currentRowImages[l].getElementsByTagName("A").length > 0 && hasClass(currentRowImages[l].getElementsByTagName("A")[0], options.photoAnchorClass)) {
+                                currentRowImages[l].getElementsByTagName("IMG")[0].setAttribute("data-highres", currentRowImages[l].getElementsByTagName("A")[0].getAttribute("data-big-photo"));
+                                currentRowImages[l].getElementsByTagName("IMG")[0].setAttribute("data-orig-width", currentRowImages[l].getElementsByTagName("A")[0].getAttribute("data-big-photo-width"));
+                                currentRowImages[l].getElementsByTagName("IMG")[0].setAttribute("data-orig-height", currentRowImages[l].getElementsByTagName("A")[0].getAttribute("data-big-photo-height"));
+                                currentRowImages[l].appendChild(currentRowImages[l].getElementsByTagName("IMG")[0]);
+                                currentRowImages[l].getElementsByTagName("A")[0].remove();
+                            }
                             /* remove extra wrapper */
                             if (currentRowImages[l].parentNode.className == options.extraWrapperClass) {
                                 currentRowImages[l].parentNode.setAttribute("deletenode", "true");
