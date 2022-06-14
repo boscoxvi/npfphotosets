@@ -1,4 +1,4 @@
-/* npfPhotosets() v2.2.8 made by codematurgy@tumblr */
+/* npfPhotosets() v2.2.9 made by codematurgy@tumblr */
             
 var rowFunctionAttached = false;
 
@@ -96,26 +96,41 @@ function npfPhotosets(selector, options) {
             /* styling */
             var photosets = postCollection[i].querySelectorAll("." + options.generatedPhotosetContainerClass);
             for (j = 0; j < photosets.length; j++) {
+                /* general image styling */
+                var currentPhotosetImages = photosets[j].getElementsByClassName(options.imageContainerClass);
+                for (k = 0; k < currentPhotosetImages.length; k++) {
+                    /* image class */
+                    for (l = 0; l < currentPhotosetImages[k].getElementsByTagName("img").length; l++) { currentPhotosetImages[k].getElementsByTagName("img")[l].className += " " + options.imageClass; }
+                    /* handle photo anchors */
+                    var anchors = currentPhotosetImages[k].getElementsByTagName("A");
+                    for (l = 0; l < anchors.length; l++) {
+                        if (hasClass(anchors[l], options.photoAnchorClass)) {
+                            var anchorImg = anchors[l].parentNode.getElementsByTagName("IMG")[0];
+                            anchorImg.setAttribute("data-highres", anchors[l].getAttribute("data-big-photo"));
+                            anchorImg.setAttribute("data-orig-width", anchors[l].getAttribute("data-big-photo-width"));
+                            anchorImg.setAttribute("data-orig-height", anchors[l].getAttribute("data-big-photo-height"));
+                            currentPhotosetImages[k].appendChild(anchorImg);
+                            anchors[l].remove();
+                        }
+                    }
+                    /* insertion of gallery indicators */
+                    if (options.insertGalleryIndicator) {
+                        var generateGalleryIndicator = document.createElement("div");
+                        generateGalleryIndicator.className = options.galleryIndicatorClass;
+                        generateGalleryIndicator.innerHTML = options.galleryIndicatorContent;
+                        currentPhotosetImages[k].appendChild(generateGalleryIndicator);
+                    }
+                }
                 /* row-specific styling */
                 var currentPhotosetRows = photosets[j].children;
                 for (k = 0; k < currentPhotosetRows.length; k++) {
                     /* row margin */
                     if (k < currentPhotosetRows.length - 1) { currentPhotosetRows[k].style.marginBottom = usedMargin + usedUnit; }
-                    /* image class */
-                    for (l = 0; l < currentPhotosetRows[k].getElementsByTagName("img").length; l++) { currentPhotosetRows[k].getElementsByTagName("img")[l].className += " " + options.imageClass; }
-                    /* style row with more than one image */
-                    if (hasClass(currentPhotosetRows[k], options.rowClass)) {
+                    /* check for image container */
+                    var currentRowImages = currentPhotosetRows[k].querySelectorAll("." + options.imageContainerClass);
+                    for (l = 0; l < currentRowImages.length; l++) {
                         /* style row images */
-                        var currentRowImages = currentPhotosetRows[k].querySelectorAll("." + options.imageContainerClass);
-                        for (l = 0; l < currentRowImages.length; l++) {
-                            /* handle photo anchor situation */
-                            if (currentRowImages[l].getElementsByTagName("A").length > 0 && hasClass(currentRowImages[l].getElementsByTagName("A")[0], options.photoAnchorClass)) {
-                                currentRowImages[l].getElementsByTagName("IMG")[0].setAttribute("data-highres", currentRowImages[l].getElementsByTagName("A")[0].getAttribute("data-big-photo"));
-                                currentRowImages[l].getElementsByTagName("IMG")[0].setAttribute("data-orig-width", currentRowImages[l].getElementsByTagName("A")[0].getAttribute("data-big-photo-width"));
-                                currentRowImages[l].getElementsByTagName("IMG")[0].setAttribute("data-orig-height", currentRowImages[l].getElementsByTagName("A")[0].getAttribute("data-big-photo-height"));
-                                currentRowImages[l].appendChild(currentRowImages[l].getElementsByTagName("IMG")[0]);
-                                currentRowImages[l].getElementsByTagName("A")[0].remove();
-                            }
+                        if (hasClass(currentPhotosetRows[k], options.rowClass)) {
                             /* remove extra wrapper */
                             if (currentRowImages[l].parentNode.className == options.extraWrapperClass) {
                                 currentRowImages[l].parentNode.setAttribute("deletenode", "true");
@@ -124,13 +139,6 @@ function npfPhotosets(selector, options) {
                             }
                             /* image container margin */
                             if (l < currentRowImages.length - 1) { currentRowImages[l].style.marginRight = usedMargin + usedUnit; }
-                            /* insertion of gallery indicators */
-                            if (options.insertGalleryIndicator) {
-                                var generateGalleryIndicator = document.createElement("div");
-                                generateGalleryIndicator.className = options.galleryIndicatorClass;
-                                generateGalleryIndicator.innerHTML = options.galleryIndicatorContent;
-                                currentRowImages[l].appendChild(generateGalleryIndicator);
-                            }
                         }
                     }
                 }
@@ -233,7 +241,7 @@ function npfPhotosets(selector, options) {
             
             for (i = 0; i < imageCollection.length; i++) {
                 for (element = imageCollection[i]; element.className.indexOf(options.generatedPhotosetContainerClass) < 0; ) { element = element.parentNode; }
-                var currentPhotosetPhotos = element.querySelectorAll("." + options.imageContainerClass);
+                var currentPhotosetPhotos = element.querySelectorAll("." + options.imageClass);
                 for (j = 0; j < currentPhotosetPhotos.length; j++) {
                     currentPhotosetPhotos[j].setAttribute("tabindex", "0");
                     currentPhotosetPhotos[j].setAttribute("data-count", (j + 1));
