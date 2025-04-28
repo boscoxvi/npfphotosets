@@ -109,7 +109,7 @@ function npfPhotosets(selector, options) {
                             anchorImg.setAttribute("data-highres", anchors[l].getAttribute("data-big-photo"));
                             anchorImg.setAttribute("data-orig-width", anchors[l].getAttribute("data-big-photo-width"));
                             anchorImg.setAttribute("data-orig-height", anchors[l].getAttribute("data-big-photo-height"));
-                            currentPhotosetImages[k].appendChild(anchorImg);
+                            currentPhotosetImages[k].prepend(anchorImg);
                             anchors[l].remove();
                         }
                     }
